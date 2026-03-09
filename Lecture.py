@@ -32,5 +32,8 @@ def read_multi_fasta(file_path: str) -> dict:
                 
 
     return sequences
+
+genome = read_multi_fasta('GCF_000864105.1_GRIPPEA_genomic.fna')
+print(genome)
 def read_multi_fasta_compresser(file_path:str)->str:
     return
