@@ -13,17 +13,21 @@ def read_genome(file_path: str) -> str:
             if not line or line.startswith(">"):
                 continue  
             genome.append(line)
-    
+    genome.append("$")  # Ajouter un caractère de fin de séquence
     return ''.join(genome)
-genome = read_genome("/Users/paullemonnier/Desktop/Master_MISO/Master 1/S2/MABS/Projet_seed-extend/GCF_000862245.1_ViralProj15330_genomic.fna")
 
-suffixe_table = [i for i in range(len(genome)-1, -1, -1)]
-print(suffixe_table)
-def tri_suffixes(genome: str) -> list:
+def suffixe_table(genome: str) -> list:
     """
-    Trie les suffixes d'une séquence génomique et retourne une table de suffixes.
+    Construit la table des suffixes pour une séquence génomique donnée.
     
-    :param genome: séquence génomique
-    :return: table de suffixes triée
+    :param genome: séquence génomique complète
+    :return: table des suffixes (liste d'indices)
+    >>> genome = "ATTGT$"
+    >>> suffixe_table(genome)
+    [5, 0, 3, 4, 2, 1]
     """
-    pass
+    suffixe_table = [i for i in range(len(genome)-1, -1, -1)]
+    suffixe_table_triée = sorted(suffixe_table, key=lambda i: genome[i:])
+    return suffixe_table_triée
+
+
