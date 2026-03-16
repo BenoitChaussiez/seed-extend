@@ -30,4 +30,62 @@ def suffixe_table(genome: str) -> list:
     suffixe_table_triée = sorted(suffixe_table, key=lambda i: genome[i:])
     return suffixe_table_triée
 
+def est_present_dicho(suffix_table, kmer, genome):
+    """
+    Recherche dichotomique pour trouver toutes les positions où un k-mer est présent dans le génome en utilisant la table des suffixes.
+    
+    :param suffix_table: table des suffixes (liste d'indices triés)
+    :param kmer: le k-mer à rechercher
+    :param genome: la séquence génomique
+    :return: liste des positions de départ du k-mer dans le génome
+    """
+    # Recherche binaire pour trouver une occurrence
+    left, right = 0, len(suffix_table) - 1
+    found = False
+    while left <= right:
+        mid = (left + right) // 2
+        suffix_start = suffix_table[mid]
+        suffix = genome[suffix_start:]
+        if suffix.startswith(kmer):
+            found = True
+            break
+        elif suffix < kmer:
+            left = mid + 1
+        else:
+            right = mid - 1
+    
+    if not found:
+        return []
+    
+    # Trouver la limite gauche (première occurrence)
+    left_bound = mid
+    while left_bound > 0 and genome[suffix_table[left_bound - 1]:].startswith(kmer):
+        left_bound -= 1
+    
+    # Trouver la limite droite (dernière occurrence)
+    right_bound = mid
+    while right_bound < len(suffix_table) - 1 and genome[suffix_table[right_bound + 1]:].startswith(kmer):
+        right_bound += 1
+    
+    # Collecter toutes les positions
+    positions = sorted([suffix_table[i] for i in range(left_bound, right_bound + 1)])
+    return positions
 
+# genome = read_genome('GCF_000862245.1_ViralProj15330_genomic.fna')
+# table_suffixes = suffixe_table(genome)
+# print(table_suffixes)
+# pos = est_present_dicho(table_suffixes, "GAGTGGGTTGTTCCCACTCACTCCA", genome)
+# print(pos)
+# print(genome[0:30])  # Affiche une portion du génome pour vérifier la présence du k-mer
+
+# def kmers(read: str, k: int) -> set:
+#     """
+#     Génère un ensemble de tous les k-mers présents depuis le read souhaité.
+    
+#     :param read: la séquence du read à partir de laquelle générer les k-mers
+#     :param k: la longueur des k-mers
+#     :return: un ensemble de k-mers
+#     """
+#     return set([read[i:i+k] for i in range(0, (len(read) - k + 1), 5)])
+
+# print(kmers("TTAAAACTGGGAGTGGGTTGTTCCCACTCACTCCACCCAT", 25))
