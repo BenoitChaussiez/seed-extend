@@ -1,7 +1,6 @@
 from parser import *
 from Preprocess import *
 from Suffixe_table import *
-from Lecture import *
 from Alignement import *
 from DecoupeKmer import *
 from Donnees_sim import *
@@ -100,6 +99,8 @@ def main_reel(genome, reads, k, output_file):
 
 if __name__ == "__main__":
     args = parse()
-    main_test(args.genome, args.k, args.out)
+    if args.reads:
+        main_reel(args.genome, args.reads, args.k, args.out)
+    else:
+        main_test(args.genome, args.k, args.out)
     #main_reel(args.genome, args.reads, args.k, args.out)
-
