@@ -10,7 +10,16 @@ import gzip
 from Bio import SeqIO
 def extraire_kmers_read_biopython(fichier_fastq, num_read=1, k=25, step=5):
     """
+    Extrait les k-mers d'un read FASTQ.gz.
     
+    Args:
+        fichier_fastq: Chemin du fichier FASTQ.gz
+        num_read: Numéro du read (1-indexé)
+        k: Taille des k-mers
+        step: Pas d'échantillonnage
+    
+    Returns:
+        Dict avec 'nom', 'sequence', 'kmers'
     """
     with gzip.open(fichier_fastq, 'rt') as f:
         for i, record in enumerate(SeqIO.parse(f, 'fastq')):
