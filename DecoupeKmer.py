@@ -25,11 +25,8 @@ def extraire_kmers_read_biopython(fichier_fastq, num_read=1, k=25, step=5):
                 
                 return {
                     'nom': record.id,
-                    'description': record.description,
                     'sequence': sequence,
-                    'qualite': record.letter_annotations.get('phred_quality'),
-                    'kmers': kmers,
-                    'longueur': len(sequence)
+                    'kmers': kmers
                 }
 fichier = 'SRR10971381_1_100_premiers.fastq.gz'
 
