@@ -31,7 +31,7 @@ def lire_fastq(chemin, n_max=None):
     return reads
 
 
-def filtrer_fastq_debug(entree, sortie, qualite_min=20):
+def filtrer_fastq(entree, sortie, qualite_min=20):
     """Version avec debug pour voir la progression"""
     import time
     start = time.time()
@@ -57,10 +57,3 @@ def filtrer_fastq_debug(entree, sortie, qualite_min=20):
     print(f"\nTerminé: {total} reads en {time.time()-start:.1f}s")
     return conserves
 
-fichier_source = 'SRR10971381_1.fastq.gz'
-fichier_sortie = 'SRR10971381_1_qualite20.fastq.gz'
-
-nb_conserves = filtrer_fastq_debug(
-    entree=fichier_source,
-    sortie=fichier_sortie,
-    qualite_min=20)
