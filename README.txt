@@ -33,8 +33,10 @@ Parser pour le preprocess:
 -r fichier du reads
 -o fichier de sortie
 -q qualité minimal
+
 Exemple de ligne de commande :
 python3 Preprocess.py -r SRR10971381_1.fastq.gz -o SRR10971381_1_qualite20.fastq.gz 
+
 
 Etape finale pour l'alignement :
 
@@ -50,7 +52,7 @@ python3 main.py -g GCF_000862245.1_RHINo_genomic.fna -r SRR10971381_1_qualite20.
 
 
 Pour utiliser le programme il faut d'abord faire du preprocessing sur les fichiers notamment sur les fichiers de READ
-
+s
 
 Ligne de Commande de preprocess
 
