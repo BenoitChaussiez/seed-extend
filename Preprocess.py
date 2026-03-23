@@ -1,38 +1,26 @@
 import gzip
 from Bio import SeqIO
-import numpy as np
+import time
+import argparse
 
-
-def lire_fasta(chemin):
-    """Lit un fichier FASTA (compressé ou non)"""
-    genome = ""
-    if chemin.endswith('.gz'):
-        ouverture = gzip.open(chemin, 'rt')
-    else:
-        ouverture = open(chemin, 'r')
-    
-    with ouverture as f:
-        for record in SeqIO.parse(f, 'fasta'):
-            genome += str(record.seq).upper()
-    return genome
-
-def lire_fastq(chemin, n_max=None):
-    """Lit un fichier FASTQ compressé et retourne une liste de reads"""
-    reads = []
-    with gzip.open(chemin, 'rt') as f:
-        for i, record in enumerate(SeqIO.parse(f, 'fastq')):
-            if n_max and i >= n_max:
-                break
-            reads.append({
-                'nom': record.id,
-                'sequence': str(record.seq).upper(),
-                'qualite': record.letter_annotations.get("phred_quality") if record.letter_annotations else None
-            })
-    return reads
-
+def parse():
+    parser = argparse.ArgumentParser(description='Preprocessing of FASTQ files to filter out low-quality reads')
+    parser.add_argument('-r','--reads', required=True, help='fastq files')
+    parser.add_argument('-o','--out', required=True, help='Fichier de sortie')
+    parser.add_argument('-q', '--qualite', type=int, default=20, help='Minimum quality score (default: 20)')
+    return parser.parse_args()
 
 def filtrer_fastq(entree, sortie, qualite_min=20):
-    """Version avec debug pour voir la progression"""
+    """    Filtre un fichier FASTQ compressé selon le score de qualité moyen
+    
+    Paramètres:
+        entree (str): Chemin vers le fichier FASTQ.gz d'entrée
+        sortie (str): Chemin vers le fichier FASTQ.gz de sortie
+        qualite_min (int): Score Phred minimum (défaut: 20)
+    
+    Retourne:
+        int: Nombre de reads conservés
+        """
     import time
     start = time.time()
     
@@ -57,3 +45,12 @@ def filtrer_fastq(entree, sortie, qualite_min=20):
     print(f"\nTerminé: {total} reads en {time.time()-start:.1f}s")
     return conserves
 
+
+def main():
+    args = parse()
+    fichier=args.reads
+    fichier_sortie=args.out
+    qualité=args.qualite
+    filtrer_fastq(fichier,fichier_sortie,qualité)
+if __name__ =="__main__":
+    main()
