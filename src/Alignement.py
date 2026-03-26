@@ -24,7 +24,9 @@ def align_read(read, genome, pos):
     best_score = -1
     
     # Tester les deux brins
-    for read_seq in [read, reverse_complement(read)]:
+    best_strand = None
+
+    for strand, read_seq in [('+', read), ('-', reverse_complement(read))]:
         result = parasail.sg_trace(read_seq, region, 5, 1, parasail.dnafull)
         
         # Calculer l'identité
@@ -57,8 +59,9 @@ def align_read(read, genome, pos):
                 best_align = True
                 best_pos = approx_position
                 best_score = result.score
+                best_strand = strand
     
     if best_align:
-        return True, best_pos, best_score
+        return True, best_pos, best_score, best_strand
     else:
-        return False, None, 0
+        return False, None, 0, None

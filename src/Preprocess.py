@@ -3,7 +3,7 @@ from Bio import SeqIO
 import time
 import argparse
 
-def parse():
+def parse_preprocess():
     parser = argparse.ArgumentParser(description='Preprocessing of FASTQ files to filter out low-quality reads')
     parser.add_argument('-r','--reads', required=True, help='fastq files')
     parser.add_argument('-o','--out', required=True, help='Fichier de sortie')
@@ -47,7 +47,7 @@ def filtrer_fastq(entree, sortie, qualite_min=20):
 
 
 def main():
-    args = parse()
+    args = parse_preprocess()
     fichier=args.reads
     fichier_sortie=args.out
     qualité=args.qualite

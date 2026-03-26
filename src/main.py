@@ -32,32 +32,32 @@ def main_test(genome, k, output_file, align_threshold=0.8):
     with open(output_file, "w") as f:
         for num_read, read in enumerate(reads, start=1):
             # Extraire les k-mers
-            kmers = extraire_kmers_sequence(read, k, step=5)
-            
-            found_alignment = False
-            for kmer in kmers:
-                positions = est_present_dicho(table_suffixes, kmer, genome_sequence)
-                if positions:
-                    for pos in positions:
-                        # align_read retourne (aligné, position, score)
-                        aligné, align_pos, score = align_read(read, genome_sequence, pos)
-                        if aligné:
-                            # Déterminer le brin (optionnel, pour les statistiques)
-                            # On peut vérifier si le read original ou son reverse complement est dans le génome
-                            if read in genome_sequence[align_pos:align_pos+len(read)]:
-                                strand = '+'
-                                nb_forward += 1
-                            else:
-                                strand = '-'
-                                nb_reverse += 1
-                            
-                            line = f"{num_read}\t{align_pos}\t{score}\t{strand}\t{read}\n"
-                            f.write(line)
-                            nb_read_alignés += 1
-                            found_alignment = True
+            read_rc = reverse_complement(read)
+
+            for read_seq in [read, read_rc]:
+                kmers = extraire_kmers_sequence(read_seq, k, step=5)
+
+                for kmer in kmers:
+                    positions = est_present_dicho(table_suffixes, kmer, genome_sequence)
+                    if positions:
+                        for pos in positions:
+                            # align_read retourne (aligné, position, score)
+                            aligné, align_pos, score, strand = align_read(read, genome_sequence, pos)
+                            if aligné:
+                                # Déterminer le brin (optionnel, pour les statistiques)
+                                # On peut vérifier si le read original ou son reverse complement est dans le génome
+                                if strand == '+':
+                                    nb_forward += 1
+                                else:
+                                    nb_reverse += 1
+                                
+                                line = f"{num_read}\t{align_pos}\t{score}\t{strand}\t{read}\n"
+                                f.write(line)
+                                nb_read_alignés += 1
+                                found_alignment = True
+                                break
+                        if found_alignment:
                             break
-                    if found_alignment:
-                        break
         
         end = time.time()
         process = psutil.Process(os.getpid())
