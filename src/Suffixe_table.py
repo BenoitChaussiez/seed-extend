@@ -13,7 +13,7 @@ def read_genome(file_path: str) -> str:
             if not line or line.startswith(">"):
                 continue  
             genome.append(line)
-    genome.append("$")  # Ajouter un caractère de fin de séquence
+    genome.append("$") 
     return ''.join(genome)
 
 def suffixe_table(genome: str) -> list:
@@ -39,7 +39,6 @@ def est_present_dicho(suffix_table, kmer, genome):
     :param genome: la séquence génomique
     :return: liste des positions de départ du k-mer dans le génome
     """
-    # Recherche binaire pour trouver une occurrence
     left, right = 0, len(suffix_table) - 1
     found = False
     while left <= right:
@@ -57,17 +56,14 @@ def est_present_dicho(suffix_table, kmer, genome):
     if not found:
         return []
     
-    # Trouver la limite gauche (première occurrence)
     left_bound = mid
     while left_bound > 0 and genome[suffix_table[left_bound - 1]:].startswith(kmer):
         left_bound -= 1
     
-    # Trouver la limite droite (dernière occurrence)
     right_bound = mid
     while right_bound < len(suffix_table) - 1 and genome[suffix_table[right_bound + 1]:].startswith(kmer):
         right_bound += 1
     
-    # Collecter toutes les positions
     positions = sorted([suffix_table[i] for i in range(left_bound, right_bound + 1)])
     return positions
 
