@@ -23,13 +23,11 @@ def align_read(read, genome, pos):
     best_pos = None
     best_score = -1
     
-    # Tester les deux brins
     best_strand = None
 
     for strand, read_seq in [('+', read), ('-', reverse_complement(read))]:
         result = parasail.sg_trace(read_seq, region, 5, 1, parasail.dnafull)
         
-        # Calculer l'identité
         aligned_query = result.traceback.query
         aligned_ref = result.traceback.ref
         
@@ -44,7 +42,6 @@ def align_read(read, genome, pos):
         identity = (matches / total * 100) if total > 0 else 0
         
         if identity >= 80:
-            # Calculer la position
             if hasattr(result, 'ref_begin'):
                 approx_position = start + result.ref_begin
             else:

@@ -8,6 +8,7 @@ import time
 import psutil
 import os
 from Bio import SeqIO
+import gzip
 
 def main_test(genome, k, output_file, align_threshold=0.8):
     start = time.time()
@@ -89,11 +90,6 @@ def main_reel(genome, reads, k, output_file, max_reads=10000):
 
     table_suffixes = suffixe_table(genome)
     print(f"Table des suffixes construite: {len(table_suffixes)} entrées")
-    
-    print(f"\nExtrait de la table des suffixes (10 premiers):")
-    for i in range(min(10, len(table_suffixes))):
-        suffix_pos = table_suffixes[i]
-        print(f"  Position {suffix_pos}: {genome[suffix_pos:suffix_pos+30]}...")
 
     fichier_source = reads
     reads_list = []
@@ -116,57 +112,69 @@ def main_reel(genome, reads, k, output_file, max_reads=10000):
     
     print(f"Reads chargés: {len(reads_list)}")
     
-    for num_read, read in enumerate(reads_list, start=1):
-        print(f"\n{'='*60}")
-        print(f"Read {num_read}: {read[:50]}...")
-        print(f"Longueur: {len(read)}")
+    nb_read_alignés = 0
+    nb_forward = 0
+    nb_reverse = 0
+    
+    with open(output_file, "w") as out_f:
+        out_f.write("# Résultats d'alignement\n")
+        out_f.write("# Format: read_number\tposition\tscore\tstrand\tread\n")
+        out_f.write("# Pour chaque read, on teste le brin direct (+) et le brin inverse (-)\n\n")
         
-        kmers = extraire_kmers_sequence(read, k, step=5)
-        print(f"Nombre de kmers (k={k}, step=5): {len(kmers)}")
-        
-        if kmers:
-            print(f"Premier kmer: {kmers[0]}")
+        for num_read, read in enumerate(reads_list, start=1):
+            if num_read % 1000 == 0:
+                print(f"Traitement read {num_read}/{len(reads_list)}, alignés: {nb_read_alignés}...")
             
-            if kmers[0] in genome:
-                print(f"   Le kmer est dans le génome!")
-                pos = genome.find(kmers[0])
-                print(f"    Position: {pos}")
-            else:
-                print(f"  le kmer n'est PAS dans le génome")
+            found_alignment = False
+            
+            read_rc = reverse_complement(read)
+            
+            for read_seq, strand in [(read, '+'), (read_rc, '-')]:
+                kmers = extraire_kmers_sequence(read_seq, k, step=5)
                 
-                read_rc = reverse_complement(read)
-                kmers_rc = extraire_kmers_sequence(read_rc, k, step=5)
-                if kmers_rc and kmers_rc[0] in genome:
-                    print(f"   Mais le reverse complement du kmer est dans le génome!")
-                    pos = genome.find(kmers_rc[0])
-                    print(f"    Position: {pos}")
-                else:
-                    print(f"  Le kmer n'est pas trouvé, même en reverse complement")
-        
-        found = False
-        for idx, kmer in enumerate(kmers[:3]):  
-            positions = est_present_dicho(table_suffixes, kmer, genome)
-            print(f"  Kmer {idx} ('{kmer}'): {len(positions)} positions trouvées par dichotomie")
-            
-            if positions:
-                print(f"    Positions: {positions[:5]}")
-                for pos in positions[:1]:
-                    print(f"\n  Test alignement à la position {pos}:")
-                    aligné, approx_pos, score, strand = align_read(read, genome, pos)
-                    print(f"    aligné={aligné}, score={score}, strand={strand}")
+                for idx, kmer in enumerate(kmers):
+                    positions = est_present_dicho(table_suffixes, kmer, genome)
                     
-                    if aligné:
-                        print(f"   ALIGNEMENT RÉUSSI!")
-                        found = True
-                        break
-            if found:
-                break
+                    if positions:
+                        for pos in positions[:5]:
+                            aligné, approx_pos, score, align_strand = align_read(read_seq, genome, pos)
+                            
+                            if aligné:
+                                out_f.write(f"{num_read}\t{approx_pos}\t{score}\t{strand}\t{read}\n")
+                                nb_read_alignés += 1
+                                if strand == '+':
+                                    nb_forward += 1
+                                else:
+                                    nb_reverse += 1
+                                found_alignment = True
+                                break
+                        if found_alignment:
+                            break
+                
+                if found_alignment:
+                    break
         
-        if not found:
-            print(f"\n  AUCUN ALIGNEMENT trouvé pour ce read")
-
+        end = time.time()
+        process = psutil.Process(os.getpid())
+        mem = process.memory_info().rss
+        
+        out_f.write("# RÉSUMÉ\n")
+        out_f.write(f"Total reads analysés: {len(reads_list)}\n")
+        out_f.write(f"Reads alignés: {nb_read_alignés}\n")
+        if len(reads_list) > 0:
+            out_f.write(f"Taux d'alignement: {nb_read_alignés / len(reads_list):.2%}\n")
+            out_f.write(f"Reads alignés sur brin direct (+): {nb_forward}\n")
+            out_f.write(f"Reads alignés sur brin inverse (-): {nb_reverse}\n")
+        out_f.write(f"Temps d'exécution: {end - start:.2f} secondes\n")
+        out_f.write(f"Utilisation mémoire: {mem / (1024 * 1024):.2f} MB\n")
+        out_f.write(f"Paramètres: k={k}, step=5, max_reads={max_reads}\n")
+    
     print(f"\n{'='*60}")
-    print("Diagnostic terminé")
+    print(f"Résultats sauvegardés dans: {output_file}")
+    print(f"Reads alignés: {nb_read_alignés}/{len(reads_list)} ({nb_read_alignés/len(reads_list):.2%})")
+    print(f"  - Brin direct (+): {nb_forward}")
+    print(f"  - Brin inverse (-): {nb_reverse}")
+    print(f"{'='*60}")
 
 if __name__ == "__main__":
     args = parse()

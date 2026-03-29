@@ -1,6 +1,6 @@
 import gzip
 from Bio import SeqIO
-def extraire_kmers_read_biopython(fichier_fastq, num_read=1, k=25, step=5):
+def extraire_kmers_read_biopython(fichier_fastq, num_read=1, k=12, step=1):
     """
     Extrait les k-mers d'un read FASTQ.gz.
     
@@ -30,7 +30,7 @@ def extraire_kmers_read_biopython(fichier_fastq, num_read=1, k=25, step=5):
                     'kmers': kmers
                 }
 
-def extraire_kmers_fichier(fichier, num_read=1, k=25, step=5, format='fastq'):
+def extraire_kmers_fichier(fichier, num_read=1, k=12, step=1, format='fastq'):
     """
     Extrait les k-mers d'un read depuis un fichier FASTQ/FASTA (compressé ou non).
     
@@ -81,12 +81,7 @@ def extraire_kmers_sequence(sequence, k, step):
     Returns:
         List de k-mers
     """
-    sequence = sequence.upper()
     kmers = []
     for j in range(0, len(sequence) - k + 1, step):
         kmers.append(sequence[j:j+k])
     return kmers
-# fichier = 'SRR10971381_1_100_premiers.fastq.gz'
-
-# resultat = extraire_kmers_read_biopython(fichier, num_read=1, k=25, step=5)
-# print(resultat['kmers'])

@@ -16,17 +16,14 @@ def generate_reads(genome, read_length=150, n_reads=1000, both_strands=True):
     reads = []
     genome_length = len(genome)
     
-    # Fonction pour le complément inverse
     def reverse_complement(seq):
         complement = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C', 'N': 'N'}
         return ''.join(complement.get(base, 'N') for base in reversed(seq))
     
     for _ in range(n_reads):
-        # Position aléatoire
         start_pos = random.randint(0, genome_length - read_length)
         read = genome[start_pos:start_pos + read_length]
         
-        # Décider du brin
         if both_strands and random.choice([True, False]):
             read = reverse_complement(read)
         
