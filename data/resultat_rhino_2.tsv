@@ -1,0 +1,14 @@
+# Résultats d'alignement
+# Format: read_number	position	score	strand	read
+# Pour chaque read, on teste le brin direct (+) et le brin inverse (-)
+
+7937	6016	342	+	TGTAAAAGAAAGAAGGAAAGGAAAGAAGGAAAAAAAGAAAGAAGGAAAGAGAAAGAAAGAAAGAAAGAAAGAAAGAAAGAAAGAAAGAAAGAAAGTAAGGTAGAGGTTAGGGAAGTATTGTATGATAGATGTGTAGGTAGGATGGTTTGGT
+# RÉSUMÉ
+Total reads analysés: 10000
+Reads alignés: 1
+Taux d'alignement: 0.01%
+Reads alignés sur brin direct (+): 1
+Reads alignés sur brin inverse (-): 0
+Temps d'exécution: 7.59 secondes
+Utilisation mémoire: 54.11 MB
+Paramètres: k=15, step=5, max_reads=10000

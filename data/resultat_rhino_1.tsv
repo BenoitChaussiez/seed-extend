@@ -1,0 +1,18 @@
+# Résultats d'alignement
+# Format: read_number	position	score	strand	read
+# Pour chaque read, on teste le brin direct (+) et le brin inverse (-)
+
+5588	3169	274	-	GGCCGTCATCGAAGACTATGCGGTATTAGTCTGCCTTTCGGCAGGTTATCCCACAGTAATGGGAAGGTTGGATACGCGTTACTCACCCGTGCGCCGGTCGACGTCCATTCAGTGCAATCACTATATGCCGATTCCCCTCGACTTGCATGTG
+5735	2925	183	+	CGCCCTCTCTCTCTCTCTCTCTTTCTCTCTGTCTCTCACTGTCTCTCTCTCTCTCTCTCACTCTCTCTCACTCTCACTCACGCGCCCGCCCACACACACTCAACCCCCAGCAGACGGAGCTCAGCAACGCACAACACGAAAATACTCACGG
+
+============================================================
+# RÉSUMÉ
+============================================================
+Total reads analysés: 10000
+Reads alignés: 2
+Taux d'alignement: 0.02%
+Reads alignés sur brin direct (+): 1
+Reads alignés sur brin inverse (-): 1
+Temps d'exécution: 8.87 secondes
+Utilisation mémoire: 54.15 MB
+Paramètres: k=15, step=5, max_reads=10000
