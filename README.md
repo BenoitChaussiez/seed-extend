@@ -187,6 +187,8 @@ python main.py -g genome.fasta -r reads.fastq.gz -o output.tsv -k 12 -i 80
 
 ## Format de sortie
 
+## Format de sortie
+
 Le fichier `.tsv` contient pour chaque read aligné :
 
 ```
@@ -195,11 +197,17 @@ read_id    position    score    strand    sequence
 
 Un résumé est ajouté à la fin du fichier :
 
-* nombre de reads
-* nombre d’alignements
-* taux d’alignement
-* répartition des brins
-* temps d’exécution
-* mémoire utilisée
+```
+# RÉSUMÉ
+Total reads analysés: <nombre>
+Reads alignés: <nombre>
+Taux d'alignement: <pourcentage>
+Reads alignés sur brin direct (+): <nombre>
+Reads alignés sur brin inverse (-): <nombre>
+Temps d'exécution: <secondes>
+Utilisation mémoire: <MB>
+Paramètres: k=<valeur>, step=5, max_reads=<valeur>
+```
+
 
 ---

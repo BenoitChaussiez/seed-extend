@@ -117,7 +117,7 @@ def main_reel(genome, reads, k, id_threshold, output_file, max_reads=10000):
     nb_reverse = 0
     
     with open(output_file, "w") as out_f:
-        out_f.write("# Résultats d'alignement\n")
+        out_f.write("# Resultats d'alignement\n")
         out_f.write("# Format: read_number\tposition\tscore\tstrand\tread\n")
         out_f.write("# Pour chaque read, on teste le brin direct (+) et le brin inverse (-)\n\n")
         
@@ -158,16 +158,16 @@ def main_reel(genome, reads, k, id_threshold, output_file, max_reads=10000):
         process = psutil.Process(os.getpid())
         mem = process.memory_info().rss
         
-        out_f.write("# RÉSUMÉ\n")
-        out_f.write(f"Total reads analysés: {len(reads_list)}\n")
-        out_f.write(f"Reads alignés: {nb_read_alignés}\n")
+        out_f.write("# RESUME\n")
+        out_f.write(f"Total reads analyses: {len(reads_list)}\n")
+        out_f.write(f"Reads alignes: {nb_read_alignés}\n")
         if len(reads_list) > 0:
             out_f.write(f"Taux d'alignement: {nb_read_alignés / len(reads_list):.2%}\n")
-            out_f.write(f"Reads alignés sur brin direct (+): {nb_forward}\n")
-            out_f.write(f"Reads alignés sur brin inverse (-): {nb_reverse}\n")
-        out_f.write(f"Temps d'exécution: {end - start:.2f} secondes\n")
-        out_f.write(f"Utilisation mémoire: {mem / (1024 * 1024):.2f} MB\n")
-        out_f.write(f"Paramètres: k={k}, step=5, max_reads={max_reads}\n")
+            out_f.write(f"Reads alignes sur brin direct (+): {nb_forward}\n")
+            out_f.write(f"Reads alignes sur brin inverse (-): {nb_reverse}\n")
+        out_f.write(f"Temps d'execution: {end - start:.2f} secondes\n")
+        out_f.write(f"Utilisation memoire: {mem / (1024 * 1024):.2f} MB\n")
+        out_f.write(f"Parametres: k={k}, step=5, max_reads={max_reads}\n")
     
     print(f"\n{'='*60}")
     print(f"Résultats sauvegardés dans: {output_file}")
