@@ -6,7 +6,7 @@ def reverse_complement(sequence):
     return ''.join(complement.get(base, 'N') for base in reversed(sequence))
 
 
-def align_read(read, genome, pos):
+def align_read(read, genome, pos, id_threshold):
     """
     Aligne un read sur le génome à partir d'une position approximative.
     Teste les deux brins (direct et complément inverse).
@@ -41,7 +41,7 @@ def align_read(read, genome, pos):
         
         identity = (matches / total * 100) if total > 0 else 0
         
-        if identity >= 80:
+        if identity >= id_threshold:
             if hasattr(result, 'ref_begin'):
                 approx_position = start + result.ref_begin
             else:

@@ -75,7 +75,25 @@ L’objectif est de retrouver la position d’origine de reads dans un génome d
 
 * `filtrer_fastq(entree, sortie, qualite_min)`
 
-  * Filtre les reads d’un FASTQ.gz selon leur qualité moyenne.
+  * Filtre les reads d’un fichier FASTQ.gz selon leur qualité moyenne (score Phred)
+  * Écrit les reads filtrés dans un nouveau fichier FASTQ.gz
+
+* `parse()`
+
+  * Parse les arguments en ligne de commande pour le prétraitement
+
+#### Utilisation du script de prétraitement
+
+```bash
+python Preprocess.py -r reads.fastq.gz -o reads_filtered.fastq.gz -q 20
+```
+
+#### Paramètres
+
+* `-r / --reads` : fichier FASTQ.gz d’entrée (obligatoire)
+* `-o / --out` : fichier FASTQ.gz de sortie (obligatoire)
+* `-q / --qualite` : seuil de qualité minimum (défaut : 20)
+
 
 ---
 

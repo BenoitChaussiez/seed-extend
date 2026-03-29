@@ -10,7 +10,7 @@ import os
 from Bio import SeqIO
 import gzip
 
-def main_test(genome, k, output_file, align_threshold=0.8):
+def main_test(genome, k, id_threshold, output_file, align_threshold=0.8):
     start = time.time()
     
     # Lire le génome
@@ -44,7 +44,7 @@ def main_test(genome, k, output_file, align_threshold=0.8):
                     if positions:
                         for pos in positions:
                             # align_read retourne (aligné, position, score)
-                            aligné, align_pos, score, strand = align_read(read, genome_sequence, pos)
+                            aligné, align_pos, score, strand = align_read(read, genome_sequence, pos, id_threshold)
                             if aligné:
                                 # Déterminer le brin (optionnel, pour les statistiques)
                                 # On peut vérifier si le read original ou son reverse complement est dans le génome
@@ -82,7 +82,7 @@ def main_test(genome, k, output_file, align_threshold=0.8):
     print(f"  - Brin inverse (-): {nb_reverse}")
 
 
-def main_reel(genome, reads, k, output_file, max_reads=10000):  
+def main_reel(genome, reads, k, id_threshold, output_file, max_reads=10000):  
     start = time.time()
     
     genome = read_genome(genome)
@@ -137,7 +137,7 @@ def main_reel(genome, reads, k, output_file, max_reads=10000):
                     
                     if positions:
                         for pos in positions[:5]:
-                            aligné, approx_pos, score, align_strand = align_read(read_seq, genome, pos)
+                            aligné, approx_pos, score, align_strand = align_read(read_seq, genome, pos, id_threshold)
                             
                             if aligné:
                                 out_f.write(f"{num_read}\t{approx_pos}\t{score}\t{strand}\t{read}\n")
@@ -180,8 +180,8 @@ if __name__ == "__main__":
     args = parse()
     
     if hasattr(args, 'reads') and args.reads:
-        main_reel(args.genome, args.reads, args.k, args.out)
+        main_reel(args.genome, args.reads, args.k, args.i, args.out)
     else:
-        main_test(args.genome, args.k, args.out)
+        main_test(args.genome, args.k, args.i, args.out)
 
 
