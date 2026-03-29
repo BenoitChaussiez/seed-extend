@@ -153,6 +153,34 @@ pip install parasail biopython psutil
 
 ---
 
+## Tests
+
+Des tests simples sont intégrés sous forme de **doctests** directement dans les fichiers Python.
+
+Ces tests permettent de vérifier rapidement le bon fonctionnement des fonctions principales (table des suffixes, extraction de k-mers, alignement, etc.).
+
+### Exécution des doctests
+
+Depuis le terminal, lancer :
+
+```bash
+python -m doctest -v Suffixe_table.py
+python -m doctest -v Alignement.py
+python -m doctest -v DecoupeKmer.py
+```
+
+### Objectif
+
+Les doctests couvrent :
+
+* la construction et l’utilisation de la table des suffixes
+* l’extraction de k-mers
+* les fonctions utilitaires (complément inverse, génération de reads)
+
+Ces tests sont volontairement simples et servent principalement à valider le comportement attendu des fonctions de base.
+
+---
+
 ## Utilisation
 
 ### Commande générale

@@ -1,7 +1,11 @@
 import parasail
 
 def reverse_complement(sequence):
-    """Calcule le complément inverse d'une séquence ADN"""
+    """Calcule le complément inverse d'une séquence ADN
+    >>> reverse_complement("ATCG")
+    'CGAT'
+    >>> reverse_complement("NNAA")
+    'TTNN'"""
     complement = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C', 'N': 'N'}
     return ''.join(complement.get(base, 'N') for base in reversed(sequence))
 
@@ -13,6 +17,10 @@ def align_read(read, genome, pos, id_threshold):
     
     Returns:
         tuple: (aligné, position, score)
+    >>> genome = "ACGTACGTACGT"
+    >>> read = "ACGTAC"
+    >>> align_read(read, genome, 0, 80)[0]
+    True
     """
     window = len(read) + 50
     start = max(0, pos - window)

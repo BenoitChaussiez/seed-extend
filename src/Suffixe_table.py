@@ -38,6 +38,12 @@ def est_present_dicho(suffix_table, kmer, genome):
     :param kmer: le k-mer à rechercher
     :param genome: la séquence génomique
     :return: liste des positions de départ du k-mer dans le génome
+    >>> genome = "ACGTACGT"
+    >>> sa = suffixe_table(genome)
+    >>> est_present_dicho(sa, "ACG", genome)
+    [0, 4]
+    >>> est_present_dicho(sa, "TTT", genome)
+    []
     """
     left, right = 0, len(suffix_table) - 1
     found = False
