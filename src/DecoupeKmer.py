@@ -80,6 +80,11 @@ def extraire_kmers_sequence(sequence, k, step):
     
     Returns:
         List de k-mers
+
+    Doctest:
+    >>> ADN= 'ATGCGC'
+    >>> extraire_kmers_sequence(ADN,3,3)
+    ['ATG', 'CGC']
     """
     kmers = []
     for j in range(0, len(sequence) - k + 1, step):
