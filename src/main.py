@@ -13,19 +13,15 @@ import gzip
 def main_test(genome, k, id_threshold, output_file, align_threshold=0.8):
     start = time.time()
     
-    # Lire le génome
     genome_sequence = read_genome(genome)
     print(f"Génome lu: {len(genome_sequence)} bases")
     
-    # Construire la table des suffixes
     table_suffixes = suffixe_table(genome_sequence)
     print(f"Table des suffixes construite: {len(table_suffixes)} entrées")
     
-    # Simuler des reads sur les deux brins
     reads = generate_reads(genome_sequence, read_length=150, n_reads=1000, both_strands=True)
     print(f"Reads simulés: {len(reads)}")
     
-    # Aligner les reads
     nb_read_alignés = 0
     nb_read_total = len(reads)
     nb_forward = 0
@@ -33,7 +29,6 @@ def main_test(genome, k, id_threshold, output_file, align_threshold=0.8):
     
     with open(output_file, "w") as f:
         for num_read, read in enumerate(reads, start=1):
-            # Extraire les k-mers
             read_rc = reverse_complement(read)
 
             for read_seq in [read, read_rc]:
@@ -43,11 +38,8 @@ def main_test(genome, k, id_threshold, output_file, align_threshold=0.8):
                     positions = est_present_dicho(table_suffixes, kmer, genome_sequence)
                     if positions:
                         for pos in positions:
-                            # align_read retourne (aligné, position, score)
                             aligné, align_pos, score, strand = align_read(read, genome_sequence, pos, id_threshold)
                             if aligné:
-                                # Déterminer le brin (optionnel, pour les statistiques)
-                                # On peut vérifier si le read original ou son reverse complement est dans le génome
                                 if strand == '+':
                                     nb_forward += 1
                                 else:
